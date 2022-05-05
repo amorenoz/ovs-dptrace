@@ -5,6 +5,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"strings"
+
+	"golang.org/x/sys/unix"
 )
 
 const DevNameMaxSize = 64
@@ -227,9 +229,7 @@ func (e *Event) String() string {
 }
 
 func EventFromBytes(buffer *bytes.Buffer) (*Event, error) {
-
-	//log.Printf("EventFromBytes: %v", *buffer)
-	var eventBytes EventBytes
+	eventBytes := EventBytes{}
 	if err := binary.Read(buffer, binary.LittleEndian, &eventBytes); err != nil {
 		return nil, err
 	}
@@ -238,7 +238,7 @@ func EventFromBytes(buffer *bytes.Buffer) (*Event, error) {
 		Timestamp: eventBytes.Timestamp,
 		Type:      EventType(eventBytes.Type),
 		SubAction: ActionType(eventBytes.SubAction),
-		DevName:   string(eventBytes.DevName[:]),
+		DevName:   unix.ByteSliceToString(eventBytes.DevName[:]),
 		Hash:      eventBytes.Hash,
 		Protocol:  eventBytes.Protocol,
 	}
