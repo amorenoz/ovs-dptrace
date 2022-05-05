@@ -14,6 +14,9 @@ It helps visualize actions and upcalls made by the kernel datapath.
 ```
 make
 ```
+### Build requirements
+- bpftool
+- golang
 
 ## Usage
 Visualize life events:
